@@ -77,7 +77,7 @@ class PointsControllers {
         return response.json({
             id: point_id,
             ...point,
-        })
+        });
     }
 }
 
