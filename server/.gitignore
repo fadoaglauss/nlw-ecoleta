@@ -1,4 +1,7 @@
 # dependencies
 /node_modules
 
-/img/gallery
+/img/gallery/*
+!/img/gallery/.gitkeep
+
+*.sqlite
