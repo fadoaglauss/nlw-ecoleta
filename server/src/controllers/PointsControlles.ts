@@ -4,6 +4,7 @@ import knex from '../database/connection';
 class PointsControllers {
     async index(request: Request, response: Response) {
         const { city, uf, items } = request.query;
+        
         const parsedItems = String(items)
             .split(',')
             .map(item => Number(item.trim()));
@@ -51,7 +52,7 @@ class PointsControllers {
 
         const point = {
             name,
-            image: 'image-fake',
+            image: 'https://blog.guiabolso.com.br/wp-content/uploads/2018/02/mercado-1-1-700x525.jpg',
             email,
             whatsapp,
             latitude,

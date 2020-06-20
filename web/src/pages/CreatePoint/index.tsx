@@ -9,12 +9,16 @@ import api from '../../services/api';
 
 import './styles.css';
 import logo from '../../assets/logo.svg';
-import { FiArrowDownLeft } from 'react-icons/fi';
+import { FiArrowLeft } from 'react-icons/fi';
 
 interface Item {
     id: number;
     title: string;
     image_url: string;
+}
+interface Position {
+    latitude: number;
+    longitude: number;
 }
 
 interface IBGEUFResponse {
@@ -29,12 +33,12 @@ const CreatePoint = () => {
     const [UFs, setUFs] = useState<string[]>([]);
     const [cities, setCities] = useState<string[]>([]);
     const [items, setItems] = useState<Item[]>([]);
-    const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0]);
-    
+    const [initialPosition, setInitialPosition] = useState<Position>({ latitude: -19.8661054, longitude: -43.9913397 });
+
     const [selectedUF, setSelectedUF] = useState('0');
     const [selectedCity, setSelectedCity] = useState('0');
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
-    const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
+    const [selectedPosition, setSelectedPosition] = useState<Position>({ latitude: 0, longitude: 0 });
 
     const history = useHistory();
 
@@ -71,11 +75,14 @@ const CreatePoint = () => {
             });
     }, [selectedUF]);
 
+
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(position => {
             const { latitude, longitude } = position.coords;
-            setInitialPosition([latitude, longitude])
-        });
+            setInitialPosition({ latitude, longitude })
+        }, (msg) => {
+            console.error(msg)
+        }, { timeout: 10000 });
     }, []);
 
     function handleSelectUF(event: ChangeEvent<HTMLSelectElement>) {
@@ -89,10 +96,10 @@ const CreatePoint = () => {
     }
 
     function handleMapClick(event: LeafletMouseEvent) {
-        setSelectedPosition([
-            event.latlng.lat,
-            event.latlng.lng,
-        ])
+        setSelectedPosition({
+            latitude: event.latlng.lat,
+            longitude: event.latlng.lng,
+        })
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
@@ -116,7 +123,7 @@ const CreatePoint = () => {
         const { name, email, whatsapp } = formData;
         const uf = selectedUF;
         const city = selectedCity;
-        const [latitude, longitude] = selectedPosition;
+        const [latitude, longitude] = [selectedPosition.latitude, selectedPosition.longitude];
         const items = selectedItems;
 
         const data = {
@@ -132,7 +139,7 @@ const CreatePoint = () => {
         await api.post('/points', data);
 
         alert('Ponto de coleta criado!');
-        
+
         history.push('/');
     }
 
@@ -141,13 +148,13 @@ const CreatePoint = () => {
             <header>
                 <img src={logo} alt="Ecoleta" />
                 <Link to="/">
-                    <FiArrowDownLeft />
+                    <FiArrowLeft />
                     Voltar para home
                 </Link>
             </header>
 
             <form onSubmit={handleSubimit}>
-                <h1>Cadastro do <br /> ponto de colete</h1>
+                <h1>Cadastro do <br /> ponto de coleta</h1>
 
                 <fieldset>
                     <legend>
@@ -176,7 +183,7 @@ const CreatePoint = () => {
                             <span>Selecione o endereço no mapa</span>
                         </legend>
                     </div>
-                    <Map center={initialPosition} zoom={15} onClick={handleMapClick}>
+                    <Map center={[initialPosition.latitude, initialPosition.longitude]} zoom={15} onClick={handleMapClick}>
                         <TileLayer
                             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
