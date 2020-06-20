@@ -8,7 +8,7 @@ class ItensControllers {
             return {
                 id: item.id,
                 title: item.title,
-                image_url: `http://10.0.0.26:3000/public/images/${item.image}`
+                image_url: `http://10.0.0.26:3000/img/page/${item.image}`
             }
         });
         return response.json(serializedItems);
