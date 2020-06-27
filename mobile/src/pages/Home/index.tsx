@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ImageBackground, Text, Image} from 'react-native';
+import { View, ImageBackground, Text, Image } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler'
 import { Feather as Icon } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -132,7 +132,7 @@ const Home = () => {
 						</Text>
 					</View>
 					<Text style={styles.buttonText}>
-						Entrar
+						Pesquisar
           			</Text>
 				</RectButton>
 			</View>

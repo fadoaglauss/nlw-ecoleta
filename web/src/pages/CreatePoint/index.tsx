@@ -4,7 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
 
-import axios from 'axios';
+//import axios from 'axios';
 import api from '../../services/api';
 
 import Dropzone from '../../components/Dropzone';
@@ -60,24 +60,27 @@ const CreatePoint = () => {
     }, []);
 
     useEffect(() => {
+        setUFs(["MG"]); /*
         axios
             .get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
             .then(response => {
-                const ufInitials = response.data.map(uf => uf.sigla);
-                setUFs(ufInitials);
+                const ufNames = response.data.map(uf => uf.sigla);;
+                setUFs(ufNames);
             });
+            */
     }, []);
 
     useEffect(() => {
         if (selectedUF === '0') {
             return;
         }
+        setCities(["Belo Horizonte"]);/*
         axios
             .get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUF}/municipios`)
-            .then(response => {
-                const cityNames = response.data.map(city => city.nome);
+            .then(response => {                
+                const cityNames = response.data.map(city => city.nome);;
                 setCities(cityNames);
-            });
+            });*/
     }, [selectedUF]);
 
 
@@ -86,7 +89,7 @@ const CreatePoint = () => {
             const { latitude, longitude } = position.coords;
             setInitialPosition({ latitude, longitude })
         }, (msg) => {
-            console.error(msg)
+            console.error(msg);
         }, { timeout: 10000 });
     }, []);
 
@@ -140,7 +143,7 @@ const CreatePoint = () => {
         data.append('city', city);
         data.append('latitude', String(latitude));
         data.append('longitude', String(longitude));
-        data.append('items', items.join(''));
+        data.append('items', items.join(','));
 
         if (selectedFile) {
             data.append('image', selectedFile);
